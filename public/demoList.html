@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Demo list</title>
+    <style>
+        ul {
+            list-style-type: lower-roman;
+        }
+
+        a {
+            color: #43853d;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="DL">
+
+    </ul>
+</body>
+<script>
+    fetch('/dirdata.json').then(function (res) {
+        return res.json()
+    }).then(function (data) {
+        if (({}).toString.call(data) == '[object Array]') {
+            var html = '';
+            data.forEach(function (val) {
+                html += '<li><a href="/' + val + '/">' + val + '</a></li>'
+            }, this);
+            document.getElementById('DL').innerHTML = html;
+        }
+    }).catch(function (err) {
+        console.log(err)
+    })
+</script>
+
+</html>

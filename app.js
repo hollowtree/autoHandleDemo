@@ -55,11 +55,12 @@ app.use(async function (ctx, next) {
         unzipFileName + '_' + now.getFullYear() + '_' + (nowMonth < 10 ? '0' + nowMonth : nowMonth) + '_' + (nowDate < 10 ? '0' + nowDate : nowDate) + '_' + Math.floor(Math.random() * 10000) + unzipFileExt
     );
     const stream = fs.createWriteStream(zipFilePath);
-    reader.pipe(stream).on('close', function () {
-        if (unzipFileExt == '.zip') {
-            unzipFile(zipFilePath, unzipFileName)
-        }
-    });
+    reader.pipe(stream)
+        .on('close', function () {
+            if (unzipFileExt == '.zip') {
+                unzipFile(zipFilePath, unzipFileName)
+            }
+        });
     console.log('uploading %s -> %s', file.name, stream.path);
     ctx.redirect('/');
 });
@@ -67,8 +68,34 @@ app.use(async function (ctx, next) {
 async function unzipFile(filePath, unzipFileName) {
     shell.rm('-rf', path.join(__dirname, 'public', unzipFileName))
     fs.createReadStream(filePath)
-        .pipe(unzipper.Extract({ path: 'public/' + unzipFileName }));
+        .pipe(unzipper.Extract({ path: 'public/' + unzipFileName }))
+        .on('close', function () {
+            setTimeout(function() {
+                generateDirData()
+            }, 1000);
+        })
 }
 
+async function generateDirData() {
+    let dirData = []
+    let files = []
+    files = await fs.readdirSync(path.join(__dirname, 'public'))
+    for(let val of files){
+        if (['404.html', 'index.html', 'dirdata.json'].indexOf(val) < 0) {
+            let isIndexExist = await fs.existsSync(path.join(__dirname, 'public', val, 'index.html'))
+            if(isIndexExist){
+                // console.log(val, '/ has index.html.')
+                dirData.push(val)
+            }
+        }
+    }
+    await fs.writeFileSync(
+        path.join(__dirname, 'public', 'dirdata.json'),
+        JSON.stringify(dirData),
+        (err) => {
+            // console.log(err)
+        }
+    )
+}
 app.listen(3000);
 console.log('listening on port 3000');
