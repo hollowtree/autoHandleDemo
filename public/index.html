@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload</title>
+  <style>
+    body {
+      padding: 50px;
+      font: 14px 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    form{
+        margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>File Upload</h1>
+  <form action="/" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".zip">
+    <input type="submit" value="上传">
+  </form>
+  <p>上传文件名：xxx.zip</p>
+  <p>zip文件结构：</p>
+  <pre>
+  <code>
+      xxx.zip
+          ├ index.html
+          ├ css/
+          │    ├ ...
+          │    └ ...
+          ├ img/
+          │    ├ ...
+          │    └ ...
+          ├ js/
+               ├ ...
+               └ ...
+  </code>
+  </pre>
+  <p>对应的html地址： http://[domain][:port]/xxx/index.html</p>
+  <p>注意：请确证 index.html 为 xxx.zip 的子文件，而不是中间还隔了一或多层目录。</p>
+</body>
+</html>
