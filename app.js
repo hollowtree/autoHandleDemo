@@ -47,12 +47,16 @@ app.use(async function (ctx, next) {
     const reader = fs.createReadStream(file.path);
     //   const stream = fs.createWriteStream(path.join(os.tmpdir(), Math.random().toString()));
     const now = new Date(),
+        nowYear = now.getFullYear(),
         nowMonth = now.getMonth() + 1,
-        nowDate = now.getDate();
+        nowDate = now.getDate(),
+        nowHour = now.getHours(),
+        nowMinute = now.getMinutes(),
+        nowSecond = now.getSeconds();
     const zipFilePath = path.join(
         __dirname,
         'storage',
-        unzipFileName + '_' + now.getFullYear() + '_' + (nowMonth < 10 ? '0' + nowMonth : nowMonth) + '_' + (nowDate < 10 ? '0' + nowDate : nowDate) + '_' + Math.floor(Math.random() * 10000) + unzipFileExt
+        unzipFileName + '_' + nowYear + '_' + (nowMonth < 10 ? '0' + nowMonth : nowMonth) + '_' + (nowDate < 10 ? '0' + nowDate : nowDate) + '_' + nowHour + '_' + nowMinute + '_' + nowSecond + '_' + Math.floor(Math.random() * 10000) + unzipFileExt
     );
     const stream = fs.createWriteStream(zipFilePath);
     reader.pipe(stream)
